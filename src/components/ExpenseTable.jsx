@@ -4,7 +4,7 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 
-export default function ExpenseTable() {
+export default function ExpenseTable({ expensiveData }) {
   return (
     <div className="expense-table">
       <table className="w-full border-collapse">
@@ -49,16 +49,29 @@ export default function ExpenseTable() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="border border-gray-400 p-2">Milk</td>
-            <td className="border border-gray-400 p-2">Grocery</td>
-            <td className="border border-gray-400 p-2">
-              <div className="flex items-center justify-end">
-                <FaRupeeSign className="font-normal text-[13px] opacity-70" />
-                <span>40</span>.00
-              </div>
-            </td>
-          </tr>
+          {!expensiveData.length ? (
+            <tr>
+              <td
+                colSpan="3"
+                className="border border-gray-400 p-2 text-center"
+              >
+                No data available.
+              </td>
+            </tr>
+          ) : (
+            expensiveData.map(({ id, title, category, amount }) => (
+              <tr key={id}>
+                <td className="border border-gray-400 p-2">{title}</td>
+                <td className="border border-gray-400 p-2">{category}</td>
+                <td className="border border-gray-400 p-2">
+                  <div className="flex items-center justify-end">
+                    <FaRupeeSign className="font-normal text-[13px] opacity-70" />
+                    <span>{amount}</span>.00
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
         <tfoot>
           <tr>
