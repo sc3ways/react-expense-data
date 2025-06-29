@@ -1,4 +1,4 @@
-export default [
+export const expenses = [
   {
     id: crypto.randomUUID(),
     title: "Milk",
@@ -23,4 +23,13 @@ export default [
     category: "Snacks",
     amount: 50,
   },
+];
+
+export const options = [
+  "Dairy",
+  "Fruits",
+  "Vegetables",
+  "Clothes",
+  "Education",
+  "Snacks",
 ];

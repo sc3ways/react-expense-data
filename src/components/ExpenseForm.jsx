@@ -4,6 +4,7 @@ import Input from "./Input";
 import Select from "./Select";
 import { useRef, useState } from "react";
 import { validateConfig } from "../rules/ValidateRules";
+import { options } from "../appData";
 
 export default function ExpenseForm({ setExpensiveData }) {
   const [formData, setFormData] = useState({
@@ -13,15 +14,6 @@ export default function ExpenseForm({ setExpensiveData }) {
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState();
-
-  const options = [
-    "Dairy",
-    "Fruits",
-    "Vegetables",
-    "Clothes",
-    "Education",
-    "Snacks",
-  ];
 
   const formRefs = {
     title: useRef(null),

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseTable from "./components/ExpenseTable";
+import { expenses } from "./appData";
 
 function App() {
-  const [expensiveData, setExpensiveData] = useState([]);
+  const [expensiveData, setExpensiveData] = useState(expenses);
 
   return (
     <div className="main-wrap">

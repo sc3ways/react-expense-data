@@ -3,8 +3,23 @@ import {
   FaLongArrowAltUp,
   FaRupeeSign,
 } from "react-icons/fa";
+import { options } from "../appData";
+import { useFilter } from "../hooks/useFilter";
 
 export default function ExpenseTable({ expensiveData }) {
+  const [filteredData, setQuery] = useFilter(
+    expensiveData,
+    (data) => data.category
+  );
+  const totalAmount = filteredData.reduce(
+    (accumulator, current) => accumulator + current.amount,
+    0
+  );
+  // const filteredData = expensiveData.filter((expenseData) => {
+  //   // console.log(expense.category);
+  //   return expenseData.category.toLowerCase().includes(category);
+  // });
+  console.log(totalAmount);
   return (
     <div className="expense-table">
       <table className="w-full border-collapse">
@@ -14,13 +29,13 @@ export default function ExpenseTable({ expensiveData }) {
             <th className="border border-gray-400">
               <select
                 name="category"
-                id="category"
+                onChange={(e) => setQuery(e.target.value.toLowerCase())}
                 className="w-full h-9 border-none bg-white text-gray-800 px-2"
               >
-                <option value="All" hidden className="font-normal">
+                <option value="All" className="font-normal">
                   All
                 </option>
-                <option value="Dairy" className="font-normal">
+                {/* <option value="Dairy" className="font-normal">
                   Dairy
                 </option>
                 <option value="Fruits" className="font-normal">
@@ -29,12 +44,21 @@ export default function ExpenseTable({ expensiveData }) {
                 <option value="Vegetables" className="font-normal">
                   Vegetables
                 </option>
-                <option value="Grains" className="font-normal">
-                  Grains
+                <option value="Clothes" className="font-normal">
+                  Clothes
                 </option>
                 <option value="Snacks" className="font-normal">
                   Snacks
-                </option>
+                </option> */}
+                {options.map((option, index) => (
+                  <option
+                    key={index + 1}
+                    value={option}
+                    className="font-normal"
+                  >
+                    {option}
+                  </option>
+                ))}
               </select>
             </th>
             <th className="border border-gray-400 w-[27%]">
@@ -49,7 +73,19 @@ export default function ExpenseTable({ expensiveData }) {
           </tr>
         </thead>
         <tbody>
-          {!expensiveData.length ? (
+          {/* {filteredData.map(({ id, title, category, amount }) => (
+            <tr key={id}>
+              <td className="border border-gray-400 p-2">{title}</td>
+              <td className="border border-gray-400 p-2">{category}</td>
+              <td className="border border-gray-400 p-2">
+                <div className="flex items-center justify-end">
+                  <FaRupeeSign className="font-normal text-[13px] opacity-70" />
+                  <span>{amount}</span>.00
+                </div>
+              </td>
+            </tr>
+          ))} */}
+          {!filteredData.length ? (
             <tr>
               <td
                 colSpan="3"
@@ -59,7 +95,7 @@ export default function ExpenseTable({ expensiveData }) {
               </td>
             </tr>
           ) : (
-            expensiveData.map(({ id, title, category, amount }) => (
+            filteredData.map(({ id, title, category, amount }) => (
               <tr key={id}>
                 <td className="border border-gray-400 p-2">{title}</td>
                 <td className="border border-gray-400 p-2">{category}</td>
@@ -80,7 +116,7 @@ export default function ExpenseTable({ expensiveData }) {
             <th className="border border-gray-400 p-2">
               <div className="flex items-center justify-end">
                 <FaRupeeSign className="font-normal text-[13px] opacity-70" />
-                <span>40</span>.00
+                <span>{totalAmount}</span>.00
               </div>
             </th>
           </tr>
