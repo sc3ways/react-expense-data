@@ -19,7 +19,7 @@ export default function ExpenseTable({ expensiveData }) {
   //   // console.log(expense.category);
   //   return expenseData.category.toLowerCase().includes(category);
   // });
-  console.log(totalAmount);
+  // console.log(totalAmount);
   return (
     <div className="expense-table">
       <table className="w-full border-collapse">
