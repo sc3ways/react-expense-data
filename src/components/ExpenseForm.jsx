@@ -30,7 +30,7 @@ export default function ExpenseForm({ setExpensiveData }) {
 
       if (rules && Array.isArray(rules)) {
         for (const rule of rules) {
-          if (rule.required && !value.trim()) {
+          if (rule.required && !value) {
             errorsData[key] = rule.message;
             if (!firstInvalidField) firstInvalidField = key;
             break;
@@ -62,7 +62,7 @@ export default function ExpenseForm({ setExpensiveData }) {
     setFormData((prevData) => ({
       ...prevData,
 
-      [name]: value,
+      [name]: name === "amount" ? parseInt(value) || "" : value,
     }));
     setErrors("");
     setSuccess("");
@@ -101,6 +101,7 @@ export default function ExpenseForm({ setExpensiveData }) {
   return (
     <div className="expense-form p-7 rounded-lg bg-white drop-shadow-xl">
       <Input
+        type="text"
         label="Title"
         name="title"
         value={formData.title}
@@ -121,12 +122,13 @@ export default function ExpenseForm({ setExpensiveData }) {
       />
 
       <Input
+        type="text"
         label="Amount"
         name="amount"
         value={formData.amount}
         handleOnChange={handleOnChange}
         formRef={formRefs.amount}
-        placeholder="Enter expense title"
+        placeholder="Enter amount"
         error={errors.amount}
       />
 

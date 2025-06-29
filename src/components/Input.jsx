@@ -9,6 +9,7 @@ export default function Input({
   error,
   placeholder,
   value,
+  type,
 }) {
   return (
     <div className="input-group mb-4 relative">
@@ -16,7 +17,7 @@ export default function Input({
         {label}
       </label>
       <input
-        type="text"
+        type={type}
         ref={formRef}
         name={name}
         value={value}
