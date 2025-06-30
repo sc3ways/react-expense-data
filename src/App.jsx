@@ -17,7 +17,10 @@ function App() {
             <ExpenseForm setExpensiveData={setExpensiveData} />
           </div>
           <div className="lg:w-[50%] sm:w-[100%] p-3">
-            <ExpenseTable expensiveData={expensiveData} />
+            <ExpenseTable
+              expensiveData={expensiveData}
+              setExpensiveData={setExpensiveData}
+            />
           </div>
         </div>
       </div>
