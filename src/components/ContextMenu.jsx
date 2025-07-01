@@ -5,6 +5,9 @@ export default function ContextMenu({
   setContextMenuPosition,
   rowId,
   setExpensiveData,
+  setFormData,
+  expensiveData,
+  setUpdatingDataId,
 }) {
   if (!contextMenuPosition.left) return;
   return (
@@ -16,6 +19,17 @@ export default function ContextMenu({
         className="py-1 px-2 block hover:bg-gray-200 cursor-default rounded-sm"
         onClick={(e) => {
           console.log("Editing");
+
+          console.log(expensiveData.find((data) => data.id === rowId));
+          const { title, category, amount } = expensiveData.find(
+            (data) => data.id === rowId
+          );
+          setFormData({
+            title: title,
+            category: category,
+            amount: amount,
+          });
+          setUpdatingDataId(rowId);
           setContextMenuPosition({});
         }}
       >

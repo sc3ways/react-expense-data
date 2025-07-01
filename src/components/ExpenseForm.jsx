@@ -6,12 +6,13 @@ import { useRef, useState } from "react";
 import { validateConfig } from "../rules/ValidateRules";
 import { options } from "../appData";
 
-export default function ExpenseForm({ setExpensiveData }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "",
-    amount: "",
-  });
+export default function ExpenseForm({
+  setExpensiveData,
+  formData,
+  setFormData,
+  updatingDataId,
+  setUpdatingDataId,
+}) {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState();
 
@@ -72,6 +73,24 @@ export default function ExpenseForm({ setExpensiveData }) {
 
     const validateRes = validateForms(formData, formRefs);
     if (Object.keys(validateRes).length > 0) return;
+
+    if (updatingDataId) {
+      setExpensiveData((prevState) =>
+        prevState.map((item) => {
+          if (item.id === updatingDataId) {
+            return { ...item, ...formData, id: updatingDataId };
+          }
+          return item;
+        })
+      );
+      setUpdatingDataId("");
+      setFormData({
+        title: "",
+        category: "",
+        amount: "",
+      });
+      return;
+    }
 
     const entry = {
       id: crypto.randomUUID(),
@@ -137,7 +156,8 @@ export default function ExpenseForm({ setExpensiveData }) {
           onClick={handleExpenseAddBtn}
           className="h-11 px-4 bg-blue-600 font-semibold text-white w-30 rounded-sm hover:bg-pink-600 flex items-center justify-center gap-2"
         >
-          Add <BiPlusCircle className="text-lg" />
+          {updatingDataId ? "Save" : "Add"}
+          <BiPlusCircle className="text-lg" />
         </button>
         <button
           onClick={handleReset}

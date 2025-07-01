@@ -4,6 +4,12 @@ import ExpenseTable from "./components/ExpenseTable";
 import { expenses } from "./appData";
 
 function App() {
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    amount: "",
+  });
+  const [updatingDataId, setUpdatingDataId] = useState("");
   const [expensiveData, setExpensiveData] = useState(expenses);
 
   return (
@@ -14,12 +20,20 @@ function App() {
             <h1 className="capitalize font-semibold">Track your expenses</h1>
           </div>
           <div className="lg:w-[50%] sm:w-[100%] xs:w-[100%] p-3">
-            <ExpenseForm setExpensiveData={setExpensiveData} />
+            <ExpenseForm
+              formData={formData}
+              setFormData={setFormData}
+              setExpensiveData={setExpensiveData}
+              updatingDataId={updatingDataId}
+              setUpdatingDataId={setUpdatingDataId}
+            />
           </div>
           <div className="lg:w-[50%] sm:w-[100%] p-3">
             <ExpenseTable
               expensiveData={expensiveData}
+              setFormData={setFormData}
               setExpensiveData={setExpensiveData}
+              setUpdatingDataId={setUpdatingDataId}
             />
           </div>
         </div>

@@ -8,7 +8,12 @@ import { useFilter } from "../hooks/useFilter";
 import ContextMenu from "./ContextMenu";
 import { useState } from "react";
 
-export default function ExpenseTable({ expensiveData, setExpensiveData }) {
+export default function ExpenseTable({
+  expensiveData,
+  setExpensiveData,
+  setFormData,
+  setUpdatingDataId,
+}) {
   const [contextMenuPosition, setContextMenuPosition] = useState({});
   const [rowId, setRowId] = useState("");
   const [filteredData, setQuery] = useFilter(
@@ -31,6 +36,9 @@ export default function ExpenseTable({ expensiveData, setExpensiveData }) {
         setContextMenuPosition={setContextMenuPosition}
         rowId={rowId}
         setExpensiveData={setExpensiveData}
+        setFormData={setFormData}
+        expensiveData={expensiveData}
+        setUpdatingDataId={setUpdatingDataId}
       />
       <div className="expense-table" onClick={() => setContextMenuPosition({})}>
         <table className="w-full border-collapse">
