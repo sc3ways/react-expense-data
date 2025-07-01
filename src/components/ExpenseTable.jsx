@@ -84,8 +84,26 @@ export default function ExpenseTable({
                 <div className="flex justify-between items-center px-2">
                   <span>Amount</span>
                   <span className="flex gap-1">
-                    <FaLongArrowAltUp />
-                    <FaLongArrowAltDown />
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setExpensiveData((prevState) =>
+                          prevState.sort((a, b) => a.amount - b.amount)
+                        );
+                      }}
+                    >
+                      <FaLongArrowAltUp />
+                    </span>
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setExpensiveData((prevState) =>
+                          prevState.sort((a, b) => b.amount - a.amount)
+                        );
+                      }}
+                    >
+                      <FaLongArrowAltDown />
+                    </span>
                   </span>
                 </div>
               </th>
