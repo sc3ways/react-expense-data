@@ -7,6 +7,7 @@ import { options } from "../appData";
 import { useFilter } from "../hooks/useFilter";
 import ContextMenu from "./ContextMenu";
 import { useState } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function ExpenseTable({
   expensiveData,
@@ -15,11 +16,12 @@ export default function ExpenseTable({
   setUpdatingDataId,
 }) {
   const [contextMenuPosition, setContextMenuPosition] = useState({});
-  const [rowId, setRowId] = useState("");
+  const [rowId, setRowId] = useLocalStorage("rowId", "");
   const [filteredData, setQuery] = useFilter(
     expensiveData,
     (data) => data.category
   );
+  const [sortCallback, setSortCallback] = useState(() => () => {});
   const totalAmount = filteredData.reduce(
     (accumulator, current) => accumulator + current.amount,
     0
@@ -40,18 +42,53 @@ export default function ExpenseTable({
         expensiveData={expensiveData}
         setUpdatingDataId={setUpdatingDataId}
       />
-      <div className="expense-table" onClick={() => setContextMenuPosition({})}>
+      <div
+        className="expense-table bg-white rounded-xl p-3"
+        onClick={() => {
+          if (contextMenuPosition.left) {
+            setContextMenuPosition({});
+          }
+        }}
+      >
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="border border-gray-400 w-[26%]">Title</th>
+              <th className="border border-gray-400 w-[26%]">
+                <div className="flex justify-between items-center px-2">
+                  <span>Title</span>
+                  <span className="flex gap-1">
+                    <span
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortCallback(
+                          () => (a, b) => a.title.localeCompare(b.title)
+                        );
+                      }}
+                    >
+                      <FaLongArrowAltUp />
+                    </span>
+                    <span
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortCallback(
+                          () => (a, b) => b.title.localeCompare(a.title)
+                        );
+                      }}
+                    >
+                      <FaLongArrowAltDown />
+                    </span>
+                  </span>
+                </div>
+              </th>
               <th className="border border-gray-400">
                 <select
                   name="category"
                   onChange={(e) => setQuery(e.target.value.toLowerCase())}
                   className="w-full h-9 border-none bg-white text-gray-800 px-2"
                 >
-                  <option value="All" className="font-normal">
+                  <option value="" className="font-normal">
                     All
                   </option>
                   {/* <option value="Dairy" className="font-normal">
@@ -86,20 +123,18 @@ export default function ExpenseTable({
                   <span className="flex gap-1">
                     <span
                       className="cursor-pointer"
-                      onClick={() => {
-                        setExpensiveData((prevState) =>
-                          prevState.sort((a, b) => a.amount - b.amount)
-                        );
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortCallback(() => (a, b) => a.amount - b.amount);
                       }}
                     >
                       <FaLongArrowAltUp />
                     </span>
                     <span
                       className="cursor-pointer"
-                      onClick={() => {
-                        setExpensiveData((prevState) =>
-                          prevState.sort((a, b) => b.amount - a.amount)
-                        );
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortCallback(() => (a, b) => b.amount - a.amount);
                       }}
                     >
                       <FaLongArrowAltDown />
@@ -132,31 +167,43 @@ export default function ExpenseTable({
                 </td>
               </tr>
             ) : (
-              filteredData.map(({ id, title, category, amount }) => (
-                <tr
-                  key={id}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    setContextMenuPosition({ left: e.clientX, top: e.clientY });
-                    setRowId(id);
-                  }}
-                >
-                  <td className="border border-gray-400 p-2">{title}</td>
-                  <td className="border border-gray-400 p-2">{category}</td>
-                  <td className="border border-gray-400 p-2">
-                    <div className="flex items-center justify-end">
-                      <FaRupeeSign className="font-normal text-[13px] opacity-70" />
-                      <span>{amount}</span>.00
-                    </div>
-                  </td>
-                </tr>
-              ))
+              filteredData
+                .sort(sortCallback)
+                .map(({ id, title, category, amount }) => (
+                  <tr
+                    key={id}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setContextMenuPosition({
+                        left: e.clientX,
+                        top: e.clientY,
+                      });
+                      setRowId(id);
+                    }}
+                  >
+                    <td className="border border-gray-400 p-2">{title}</td>
+                    <td className="border border-gray-400 p-2">{category}</td>
+                    <td className="border border-gray-400 p-2">
+                      <div className="flex items-center justify-end">
+                        <FaRupeeSign className="font-normal text-[13px] opacity-70" />
+                        <span>{amount}</span>.00
+                      </div>
+                    </td>
+                  </tr>
+                ))
             )}
           </tbody>
           <tfoot>
             <tr>
               <th className="border border-gray-400 text-left p-2">Total</th>
-              <th className="border border-gray-400"></th>
+              <td className="border border-gray-400 text-center">
+                <span
+                  className="cursor-pointer text-sm text-blue-600"
+                  onClick={() => setSortCallback(() => () => {})}
+                >
+                  Clear Sort
+                </span>
+              </td>
               <th className="border border-gray-400 p-2">
                 <div className="flex items-center justify-end">
                   <FaRupeeSign className="font-normal text-[13px] opacity-70" />

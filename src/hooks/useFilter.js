@@ -1,9 +1,12 @@
-import { useState } from "react";
+import useLocalStorage from "./useLocalStorage";
 
 export function useFilter(dataLists, callback) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useLocalStorage("query", "");
+  const normalQuery = query.toLocaleLowerCase();
   const filteredData = dataLists.filter((data) =>
-    callback(data).toLowerCase().includes(query)
+    normalQuery === ""
+      ? dataLists
+      : callback(data).toLowerCase().includes(normalQuery)
   );
 
   return [filteredData, setQuery];
